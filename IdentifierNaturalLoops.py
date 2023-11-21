@@ -13,19 +13,20 @@ set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])]
 
 pred = [{}, {}, {1, 3, 4}, {2}, {2}, {4, 10}, {4}, {5, 6}, {5, 9}, {8}, {9}, {7}, {10, 11}]
 
-# Informação de dominadores (manualmente inserida)
-dominators = { 1: set(),
-               2: {1},
-               3: {1},
-               4: {1, 3},
-               5: {1, 3},
-               6: {1, 3, 4},
-               7: {1, 3},
-               8: {1, 3, 4},
-               9: {1, 3, 4, 5},
-              10: {1, 3, 4, 5},
-              11: {1, 3, 4, 5, 9},
-              12: {1, 3, 4, 5, 9, 10}}
+# Definição dos Dominadores
+while True:
+    Dcopia=D.copy()
+    for i in range(2,13):
+        inter=set([1,2,3,4,5,6,7,8,9,10,11,12])
+        for l in pred[i]:
+            inter &= D[l]
+        D[i] =  {i} | inter
+    if Dcopia==D:
+        break
+
+# Impressão dos dominadores
+for i in range(1,13):
+    print("D[",i,"]:",D[i])
 
 # Identify Natural Loops
 natural_loops = {}
@@ -39,7 +40,7 @@ for header_node in range(1, 13):
                 natural_loop.add(current_node)
             
             # Fix: Use the immediate dominator instead of the dominator set
-            dominator_set = dominators[current_node]
+            dominator_set = D[current_node]
             if not dominator_set:
                 break  # Exit the loop if the dominator set is empty
             current_node = next(iter(dominator_set))
